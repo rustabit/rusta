@@ -20,12 +20,12 @@ jobs:
          sudo apt clean
          docker rmi $(docker image ls -aq)
          df -h
-      - name: Free disk space
-        run: |
-         sudo apt-get autoremove -y >/dev/null 2>&1
-         sudo apt-get autoclean -y >/dev/null 2>&1
-         sudo rm -rf /usr/local/lib/android >/dev/null 2>&1
-         docker rmi $(docker image ls -aq) >/dev/null 2>&1
+      #- name: Free disk space
+      #  run: |
+      #   sudo apt-get autoremove -y >/dev/null 2>&1
+      #   sudo apt-get autoclean -y >/dev/null 2>&1
+      #   sudo rm -rf /usr/local/lib/android >/dev/null 2>&1
+      #   docker rmi $(docker image ls -aq) >/dev/null 2>&1
       - uses: actions/checkout@v3
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
