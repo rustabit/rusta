@@ -1,0 +1,492 @@
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-------------------Custom Response Rule File -- This is to add minor New-Old Weapons Taunt / Response Tweaks!----------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+//------------------------------------
+//--New-Old Weapons Custom Responses--
+//------------------------------------
+
+// Scout
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsMIRVType" 			"playerweapon" "tf_weapon_grenade_mirv" 		"required"
+	criterion "WeaponIsFAN" 				"item_name" "TF_WEAPON_DOUBLE_BARREL" 			"required" weight 10
+	criterion "WeaponIsBonk" 				"item_name" "TF_WEAPON_ENERGY_DRINK" 			"required" weight 10
+	criterion "WeaponIsSandman" 			"item_name" "TF_WEAPON_WOOD_BAT" 				"required" weight 10
+	criterion "WeaponIsFish" 				"item_name" "TF_WEAPON_HOLYMACKEREL" 			"required" weight 10
+	criterion "WeaponIsCrowbar" 			"item_name" "TF_WEAPON_CROWBAR" 				"required" weight 10
+	criterion "WeaponIsPan" 				"item_name" "TF_WEAPON_FRYING_PAN" 				"required" weight 10
+	criterion "WeaponIsObjector" 			"item_name" "TF_WEAPON_PICKET" 					"required" weight 10
+
+	rule Custom-DoubleJumpScout																// When Scout double-jumps, and his weapon is the FAN, 20% chance to fire this response
+	{
+		criteria ConceptFireWeapon IsScout IsDoubleJumping WeaponIsFAN 20PercentChance
+		Response PlayerDoubleJumpScout
+	}
+
+	rule Custom-TossThrowableScout															// When Scout throws any "MIRV-based" throwable, fire this
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsScout
+		Response MilkLaunchScout
+	}
+	rule Custom-ScoutTauntThrowableGeneric													// When Scout taunts with any throwable, do the melee taunt
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsMIRVType
+		response ScoutTauntMelee
+	}
+	rule Custom-DrankBonkScout																// When Scout drinks the Bonk, fire this response (buffered by 2-3 secs), with about 20s downtime
+	{
+		criteria ConceptAteFood IsScout ScoutIsNotInvuln WeaponIsBonk
+		ApplyContext "ScoutInvuln:1:20"
+		Response PlayerDodgingScout
+	}
+	rule Custom-DrinkNotReady																// When Scout takes damage below 80hp with the Bonk equipped, fire this, with 10s downtime
+	{
+		criteria ConceptPain IsScout WeaponIsBonk BonkHealthContext ScoutNotDrinkReadySpeech
+		ApplyContext "ScoutDrinkReadySpeech:1:10"
+		Response DrinkNotReady
+	}
+	rule Custom-ScoutTauntDrink																// If Scout has the Bonk, do the Secondary taunt (Consumables don't have taunts by default)
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsBonk
+		response ScoutTauntSecondary
+	}
+
+	rule Custom-CrowbarKillScout															// Basher responses ("Man, you're skull's so soft.. -")
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance IsWeaponMelee WeaponIsCrowbar ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeBasherScout
+		Response KilledPlayerMeleeGenericScout
+	}
+	rule Custom-PanKillScout																// Fish responses ("Yeah I dare ya, rage-quit!")
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance IsWeaponMelee WeaponIsPan ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeFishScout
+		Response KilledPlayerMeleeGenericScout
+	}
+	rule Custom-ObjectorKillScout															// Sun-On-A-Stick Responses ("Is-is anyone even..")
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance IsWeaponMelee WeaponIsObjector ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeMaceScout
+		Response KilledPlayerMeleeGenericScout
+	}
+	rule Custom-SandmanSwingScout															// When swinging the Sandman, have a 10% chance to fire this.. I think every few swings??
+	{
+		criteria ConceptFireWeapon IsScout WeaponIsSandman 10PercentChance
+		ApplyContext "ScoutHitBallSpeech:1:10"
+		Response PlayerStunBallHittingItScout
+	}
+	rule Custom-SandmanKillScout															// If scoring a kill with the Sandman, fire the Moonshot responses, then have 10s downtime
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponMelee WeaponIsSandman ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response PlayerStunBallHitScout
+	}
+	Response Custom-FishKillExtraScout														// A few extra "humiliating" responses for the Holy Mackerel
+	{
+		scene "scenes/Player/Scout/low/2647.vcd"
+		scene "scenes/Player/Scout/low/2645.vcd"
+		scene "scenes/player/Scout/low/2654.vcd"
+	}
+	rule Custom-FishKillScout																// 50% chance to fire on killing with the Fish
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponMelee WeaponIsFish ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeFishScout
+		Response Custom-FishKillExtraScout
+	}
+
+// Soldier
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsDirectRL" 			"item_name" "TF_WEAPON_DIRECTHIT" 				"required" weight 10
+	criterion "WeaponIsRidingCrop" 			"item_name" "TF_WEAPON_RIDING_CROP" 			"required" weight 10
+
+	rule Custom-SoldierTauntDirectHit														// RPG taunt
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsDirectRL
+		response SoldierTauntDirectHit
+	}
+
+	Response Custom-TossThrowableSoldier													// Some lines to say when throwing a generic throwable - mostly reused from the Melee kill screams.
+	{
+		scene "scenes/Player/Soldier/low/1060.vcd"
+		scene "scenes/Player/Soldier/low/1114.vcd"
+		scene "scenes/Player/Soldier/low/1185.vcd"
+	}
+	rule Custom-TossThrowableSoldier														// When Soldier throws any throwable, shout a line
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSoldier
+		Response Custom-TossThrowableSoldier
+	}
+
+	Response Custom-RidingCropMoveSoldier                        							// Reused lines from Payload push responses
+	{
+		scene "scenes/Player/Soldier/low/7347.vcd"
+		scene "scenes/Player/Soldier/low/7349.vcd"
+		scene "scenes/Player/Soldier/low/7353.vcd"
+		scene "scenes/Player/Soldier/low/7354.vcd"
+		scene "scenes/Player/Soldier/low/7355.vcd"
+		scene "scenes/Player/Soldier/low/7356.vcd"
+		scene "scenes/Player/Soldier/low/7357.vcd"
+	}
+	Rule Custom-PlayerBoostSoldier_1														// Unfortunately, duplicated 10+ times since haha, no crosshair_ally criterion exists!
+	{
+		criteria ConceptPlayerGo IsOnScout IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_2
+	{
+		criteria ConceptPlayerGo IsOnSoldier IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_3
+	{
+		criteria ConceptPlayerGo IsOnPyro IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_4
+	{
+		criteria ConceptPlayerGo IsOnDemoman IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_5
+	{
+		criteria ConceptPlayerGo IsOnHeavy IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_6
+	{
+		criteria ConceptPlayerGo IsOnEngineer IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_7
+	{
+		criteria ConceptPlayerGo IsOnMedic IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_8
+	{
+		criteria ConceptPlayerGo IsOnSniper IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_9														// There's some weird behavior with disguised enemy Spies, but I'm too tired to bugfix it fully.
+	{
+		criteria ConceptPlayerGo IsOnSpy IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+	Rule Custom-PlayerBoostSoldier_10
+	{
+		criteria ConceptPlayerGo IsOnCivilian IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response Custom-RidingCropMoveSoldier
+	}
+// Pyro
+//------------------------------------------------------------------------------------------------------------
+	Response Custom-TossThrowablePyro														// Some lines for Pyro to say when throwing the Gas Passer - these are new
+	{
+		scene "scenes/Player/Pyro/low/1419.vcd"
+		scene "scenes/Player/Pyro/low/1457.vcd"
+		scene "scenes/Player/Pyro/low/1460.vcd"
+	}
+	rule Custom-TossThrowablePyro															// When Pyro throws any throwable, shout a line
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsPyro
+		Response Custom-TossThrowablePyro
+	}
+	rule Custom-PyroTauntThrowableGeneric													// Fireball taunt for Gas Can / most throwables
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsMIRVType
+		response PyroTauntItem1
+	}
+
+	rule Custom-PyroTauntPan																// Fireball taunt for Frying Pan
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsPan
+		response PyroTauntItem1
+	}
+
+// Demoman
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotMIRV" 			"item_name" "!=MIRV" 							"required" weight 10
+	criterion "WeaponIsNotPan" 				"item_name" "!=TF_WEAPON_FRYING_PAN" 			"required" weight 10
+	criterion "WeaponIsEyelander" 			"item_name" "TF_WEAPON_CLAYMORE" 				"required" weight 10
+	criterion "WeaponIsNotEyelander" 		"item_name" "!=TF_WEAPON_CLAYMORE" 				"required" weight 10
+
+	Response Custom-TossThrowableDemoman
+	{
+		scene "scenes/Player/Demoman/low/1008.vcd"
+		scene "scenes/Player/Demoman/low/1358.vcd"
+		scene "scenes/Player/Demoman/low/1379.vcd"
+	}
+	rule Custom-TossThrowableDemoman														// When Demo throws a throwable that ISN'T the MIRV, shout a line.
+	{
+		criteria ConceptFireWeapon WeaponIsNotMIRV WeaponIsMIRVType IsDemoman
+		Response Custom-TossThrowableDemoman
+	}
+
+	rule Custom-ClubKillDemoman																// If Demoman gets a kill with a Kukri type weapon, use some different slurred responses
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsClub WeaponIsNotEyelander 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerPanDemoman
+	}
+	rule Custom-DemomanTauntDemoClub														// For not-Bottle, not-Pan melees, use the GL's taunt
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsClub WeaponIsNotPan
+		response DemomanTauntSecondary
+	}
+	rule Custom-EyelanderKillDemoman
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsEyelander 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSwordDemoman
+	}
+	rule Custom-EyelanderKill2Demoman														// If a Demoman is killed with the Eyelander, fire this
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsEyelander 30PercentChance IsVictimDemoman DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSword2Demoman
+	}
+
+// Heavy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsAAGunType" 			"playerweapon" "tf_weapon_aagun" 				"required"
+	criterion "WeaponIsHMG" 				"item_name" "TF_WEAPON_MACHINEGUN" 				"required" weight 10
+	criterion "WeaponIsChainsaw" 			"item_name" "TF_WEAPON_CHAINSAW" 				"required" weight 10
+	criterion "WeaponIsAA12" 				"item_name" "TF_WEAPON_AA12_REPEATER" 			"required" weight 10
+	criterion "WeaponIsPipe" 				"item_name" "TF_WEAPON_LEAD_PIPE" 				"required" weight 10
+
+	rule Custom-HeavyFireAAGun																// When Heavy -starts- firing the AA Gun, make a face. The rest of the responses are nonfunctional for the AA Cannon
+	{
+		criteria ConceptFireMinigun IsHeavy WeaponIsAAGunType
+		Response HeavyFireMinigun
+	}
+	Response Custom-HeavyTimeFiringChainsawShort											// New lines for when Heavy is attacking with the Chainsaw
+	{
+		scene "scenes/player/heavy/low/269.vcd"
+		scene "scenes/player/heavy/low/2080.vcd"
+	}
+	Response Custom-HeavyTimeFiringChainsawLong
+	{
+		scene "scenes/Player/Heavy/low/2075.vcd"
+		scene "scenes/player/heavy/low/2077.vcd"
+	}
+	Response Custom-HeavyTimeFiringChainsawReallyLong
+	{
+		scene "scenes/player/heavy/low/319.vcd"
+		scene "scenes/player/heavy/low/326.vcd"
+		scene "scenes/player/heavy/low/2084.vcd"
+	}
+	Rule Custom-HeavyTimeFiringChainsawShort
+	{
+		criteria ConceptFireMinigunTalk IsHeavy WeaponIsChainsaw TimeFiringMinigunShort 30PercentChance
+		Response HeavyTimeFiringMinigunShort
+		Response Custom-HeavyTimeFiringChainsawShort										// Plays in addition to the base Minigun fire responses
+	}
+	Rule Custom-HeavyTimeFiringChainsawLong
+	{
+		criteria ConceptFireMinigunTalk IsHeavy WeaponIsChainsaw TimeFiringMinigunLong 50PercentChance
+		Response HeavyTimeFiringMinigunLong
+		Response Custom-HeavyTimeFiringChainsawLong
+	}
+	Rule Custom-HeavyTimeFiringChainsawReallyLong
+	{
+		criteria ConceptFireMinigunTalk IsHeavy WeaponIsChainsaw TimeFiringMinigunReallyLong 50PercentChance
+		Response HeavyTimeFiringMinigunReallyLong
+		Response Custom-HeavyTimeFiringChainsawReallyLong
+	}
+	Rule Custom-KilledChainsawHeavy															// 50% chance to play one of Heavy's many mocking Domination lines on kill.
+	{
+		criterion ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponPrimary HeavyNotKillSpeech IsHeavy WeaponIsChainsaw
+		ApplyContext "HeavyKillSpeech:1:30"
+		Response PlayerKilledDominatingHeavy
+	}
+	Rule Custom-MeleeDareChainsawHeavy														// Lets you play melee dare lines with the Chainsaw out
+	{
+		criteria ConceptPlayerBattleCry WeaponIsChainsaw IsHeavy IsCrosshairEnemy
+		ApplyContext "IsDaring:1:5"
+		Response MeleeDareCombatHeavy
+	}
+
+	rule Custom-HeavyTauntHMG																// Shotgun taunt
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsHMG
+		response HeavyTauntSecondary
+	}
+	rule Custom-HeavyTauntAA12
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsAA12
+		response HeavyTauntSecondary
+	}
+
+	Response Custom-TossThrowableHeavy
+	{
+		scene "scenes/player/heavy/low/1980.vcd"
+		scene "scenes/Player/Heavy/low/253.vcd"
+		scene "scenes/Player/Heavy/low/1979.vcd"
+	}
+	rule Custom-TossThrowableHeavy
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsHeavy
+		Response Custom-TossThrowableHeavy
+	}
+
+	rule Custom-HeavyTauntCrowbar
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsCrowbar 
+		response HeavyTauntSecondary
+	}
+	rule Custom-HeavyTauntObjector
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsObjector
+		response HeavyTauntSecondary
+	}
+	rule Custom-HeavyTauntPipe
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsPipe
+		response HeavyTauntSecondary
+	}
+
+// Engineer
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsRailgun" 			"item_name" "TF_WEAPON_RAILGUN_DM" 				"required" weight 10
+	criterion "WeaponIsRevolverEngi" 		"item_name" "TF_WEAPON_REVOLVER_ENGI" 			"required" weight 10
+	criterion "WeaponIsRevolverTypeName" 	"item_type_name" "#TF_Weapon_Revolver" 			"required" weight 10
+
+	rule Custom-EngineerTauntNailgun														// Secondary taunt
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsNailgun
+		response EngineerTauntSecondary
+	}
+	rule Custom-RailGunKillEngineer															// If an Engineer gets a kill with the Super Railgun, speak some Wrangler lines
+	{
+		criteria ConceptKilledPlayer IsEngineer WeaponIsRailgun 30PercentChance
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngineerLaserPointer
+	}
+
+	rule Custom-EngiRevolverKillEngineer													// If an Engineer gets a kill with one of his Revolvers, speak the Gunslinger triple-punch lines
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 20PercentChance WeaponIsRevolverEngi IsEngineer EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngySwingFist
+	}
+	rule Custom-RevolverTypeKillEngineer													// If an Engineer gets a kill with any Revolver-type weapon, speak the Gunslinger triple-punch lines
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 20PercentChance WeaponIsRevolverTypeName IsEngineer EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngySwingFist
+	}
+	Response Custom-TossThrowableEngineer
+	{
+		scene "scenes/Player/Engineer/low/36.vcd"
+		scene "scenes/Player/Engineer/low/88.vcd"
+		scene "scenes/Player/Engineer/low/155.vcd"
+	}
+	rule Custom-TossThrowableEngineer
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsEngineer
+		Response Custom-TossThrowableEngineer
+	}
+
+// Medic
+//------------------------------------------------------------------------------------------------------------
+	Response Custom-TossThrowableMedic
+	{
+		scene "scenes/Player/Medic/low/537.vcd" 
+		scene "scenes/Player/Medic/low/541.vcd" 
+		scene "scenes/Player/Medic/low/653.vcd" 
+	}
+	rule Custom-TossThrowableMedic
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsMedic
+		Response Custom-TossThrowableMedic
+	}
+
+	rule Custom-MedicTauntCrowbar
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsCrowbar 
+		response MedicTauntPrimary
+	}
+	rule Custom-MedicTauntPan																// Taunt kill
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsPan
+		response MedicTauntUbersaw
+	}
+	rule Custom-MedicTauntObjector
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsObjector
+		response MedicTauntPrimary
+	}
+
+// Sniper
+//------------------------------------------------------------------------------------------------------------
+	rule Custom-TossThrowableSniper															// Jarate responses, for any throwable
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSniper
+		Response PlayerJarateToss
+	}
+	rule Custom-SniperTauntThrowableGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper WeaponIsMIRVType
+		response SniperTauntHalloween														// Play the Halloween taunt for throwables, at the lack of a better one.
+	}
+
+	rule Custom-KilledPlayerCrowbarSniper
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsCrowbar SniperNotKillSpeechMelee IsSniper
+		ApplyContext "SniperKillSpeechMelee:1:10"
+		Response KilledPlayerFishwhackerSniper
+	}
+	rule Custom-KilledPlayerPanSniper
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsPan SniperNotKillSpeechMelee IsSniper
+		ApplyContext "SniperKillSpeechMelee:1:10"
+		Response KilledPlayerFishwhackerSniper
+	}
+	rule Custom-KilledPlayerObjectorSniper
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsObjector SniperNotKillSpeechMelee IsSniper
+		ApplyContext "SniperKillSpeechMelee:1:10"
+		Response KilledPlayerFishwhackerSniper
+	}
+	
+// Spy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsKnifeGun" 		"item_name" "TF_WEAPON_KNIFE_GUN" 					"required" weight 10
+
+	Response Custom-TossThrowableSpy														// I don't think these have a way to trigger naturally, but it's here as a contingency
+	{
+		scene "scenes/Player/Spy/low/707.vcd" 
+		scene "scenes/Player/Spy/low/817.vcd" 
+		scene "scenes/Player/Spy/low/820.vcd" 
+	}
+	rule Custom-TossThrowableSpy
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSpy
+		Response Custom-TossThrowableSpy
+	}
+
+	rule Custom-SpyTauntKnifeGun
+	{
+		criteria ConceptPlayerTaunt IsSpy WeaponIsKnifeGun
+		response SpyTauntPDA
+	}
+
+// Civilian (TF2C)
+//------------------------------------------------------------------------------------------------------------
+
+	Response Custom-TossThrowableCivilian
+	{
+		scene "scenes/Player/Civilian/low/Incoming01.vcd"
+		scene "scenes/Player/Civilian/low/Incoming02.vcd"
+		scene "scenes/Player/Civilian/low/Incoming03.vcd"
+	}
+	rule Custom-TossThrowableCivilian
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsCivilian
+		Response Custom-TossThrowableCivilian
+	}

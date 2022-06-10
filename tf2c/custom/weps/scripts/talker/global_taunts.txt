@@ -1,0 +1,252 @@
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//-------------------Custom Response Rule File -- This is to add taunts!----------------------------
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+
+//------------------
+//--Generic Taunts--
+//------------------
+
+// Scout
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotScattergun"		"playerweapon" "!=tf_weapon_scattergun" 		"required"
+	criterion "WeaponIsNotNailGun" 			"playerweapon" "!=tf_weapon_nailgun" 			"required"
+	criterion "WeaponIsNotPistolScout" 		"playerweapon" "!=tf_weapon_pistol_scout" 		"required"
+	criterion "WeaponIsNotBat" 				"playerweapon" "!=tf_weapon_bat" 				"required"
+	
+	rule Custom-ScoutTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout IsWeaponPrimary WeaponIsNotScattergun WeaponIsNotNailGun
+		response ScoutTauntPrimary
+	}
+	rule Custom-ScoutTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout IsWeaponSecondary WeaponIsNotPistolScout
+		response ScoutTauntSecondary
+	}
+	rule Custom-ScoutTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout IsWeaponMelee WeaponIsNotBat
+		response ScoutTauntMelee
+	}
+
+// Soldier
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotRocket" 			"playerweapon" "!=tf_weapon_rocketlauncher" 	"required"
+	criterion "WeaponIsNotShotgunSoldier" 	"playerweapon" "!=tf_weapon_shotgun_soldier" 	"required"
+	criterion "WeaponIsNotShovel" 			"playerweapon" "!=tf_weapon_shovel" 			"required"
+
+	rule Custom-SoldierTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSoldier IsWeaponPrimary WeaponIsNotRocket
+		response SoldierTauntPrimary
+	}
+	rule Custom-SoldierTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSoldier IsWeaponSecondary WeaponIsNotShotgunSoldier
+		response SoldierTauntSecondary
+	}
+	rule Custom-SoldierTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsSoldier IsWeaponMelee WeaponIsNotShovel
+		response SoldierTauntMelee
+	}
+
+// Pyro
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotFlamethrower" 	"playerweapon" "!=tf_weapon_flamethrower" 		"required"
+	criterion "WeaponIsNotShotgunPyro" 		"playerweapon" "!=tf_weapon_shotgun_pyro" 		"required"
+	criterion "WeaponIsNotFlaregun" 		"playerweapon" "!=tf_weapon_flaregun" 			"required"
+	criterion "WeaponIsNotFireAxe" 			"playerweapon" "!=tf_weapon_fireaxe" 			"required"
+
+	rule Custom-PyroTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro IsWeaponPrimary WeaponIsNotFlamethrower
+		response PyroTauntPrimary
+	}
+	rule Custom-PyroTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro IsWeaponSecondary WeaponIsNotShotgunPyro WeaponIsNotFlaregun
+		response PyroTauntSecondary
+	}
+	rule Custom-PyroTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro IsWeaponMelee WeaponIsNotFireAxe
+		response PyroTauntMelee
+	}
+
+// Demoman
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotGrenade" 			"playerweapon" "!=tf_weapon_grenadelauncher" 	"required"
+	criterion "WeaponIsNotPipebomb" 		"playerweapon" "!=tf_weapon_pipebomblauncher" 	"required"
+	criterion "WeaponIsNotMIRVType" 		"playerweapon" "!=tf_weapon_grenade_mirv" 		"required"
+	criterion "WeaponIsNotBottle" 			"playerweapon" "!=tf_weapon_bottle" 			"required"
+
+	rule Custom-DemomanTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsDemoman IsWeaponPrimary WeaponIsNotPipebomb WeaponIsNotMIRVType
+		response DemomanTauntPrimary
+	}
+	rule Custom-DemomanTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsDemoman IsWeaponSecondary WeaponIsNotGrenade
+		response DemomanTauntSecondary
+	}
+	rule Custom-DemomanTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsDemoman IsWeaponMelee WeaponIsNotBottle
+		response DemomanTauntMelee
+	}
+
+// Heavy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotMinigun" 			"playerweapon" "!=tf_weapon_minigun" 			"required"
+	criterion "WeaponIsNotShotgunHwg" 		"playerweapon" "!=tf_weapon_shotgun_hwg" 		"required"
+	criterion "WeaponIsNotLunchbox" 		"playerweapon" "!=tf_weapon_lunchbox" 			"required"
+	criterion "WeaponIsNotFists" 			"playerweapon" "!=tf_weapon_fists" 				"required"
+
+	rule Custom-HeavyTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponPrimary WeaponIsNotMinigun
+		response HeavyTauntPrimary
+	}
+	rule Custom-HeavyTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponSecondary WeaponIsNotShotgunHwg WeaponIsNotLunchbox
+		response HeavyTauntSecondary
+	}
+	rule Custom-HeavyTauntLunchboxGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponSecondary WeaponIsNotShotgunHwg WeaponIsLunchbox
+		response HeavyTauntPlayerItem1
+	}
+	rule Custom-HeavyTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponMelee WeaponIsNotFists
+		response HeavyTauntMelee
+	}
+
+// Engineer
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotShotgunPrimary" 	"playerweapon" "!=tf_weapon_shotgun_primary" 	"required"
+	criterion "WeaponIsNotPistol" 			"playerweapon" "!=tf_weapon_pistol" 			"required"
+	criterion "WeaponIsNotCoilgunType" 		"playerweapon" "!=tf_weapon_coilgun" 			"required"
+	criterion "WeaponIsNotWrench"		 	"playerweapon" "!=tf_weapon_wrench" 			"required"
+
+	criterion "WeaponIsNotBuild" 			"playerweapon" "!=tf_weapon_builder" 			"required"
+	criterion "WeaponIsNotPDABuild" 		"playerweapon" "!=tf_weapon_pda_engineer_build" "required"
+	criterion "WeaponIsNotPDADestroy" 		"playerweapon" "!=tf_weapon_pda_engineer_destroy" "required"
+
+	rule Custom-EngineerTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsEngineer IsWeaponPrimary WeaponIsNotShotgunPrimary
+		response EngineerTauntPrimary
+	}
+	rule Custom-EngineerTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsEngineer IsWeaponSecondary WeaponIsNotPistol WeaponIsNotCoilgunType
+		response EngineerTauntSecondary
+	}
+	rule Custom-EngineerTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsEngineer IsWeaponMelee WeaponIsNotWrench
+		response EngineerTauntMelee
+	}
+
+// Medic
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotSyringe" 			"playerweapon" "!=tf_weapon_syringegun_medic" 	"required"
+	criterion "WeaponIsNotHeal" 			"playerweapon" "!=tf_weapon_medigun" 			"required"
+	criterion "WeaponIsNotBonesaw" 			"playerweapon" "!=tf_weapon_bonesaw" 			"required"
+	criterion "WeaponIsNotTaser" 			"playerweapon" "!=tf_weapon_taser" 				"required"
+
+	rule Custom-MedicTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsMedic IsWeaponPrimary WeaponIsNotSyringe
+		response MedicTauntPrimary
+	}
+	rule Custom-MedicTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsMedic IsWeaponSecondary WeaponIsNotHeal
+		response MedicTauntSecondary
+	}
+	rule Custom-MedicTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsMedic IsWeaponMelee WeaponIsNotBonesaw WeaponIsNotTaser
+		response MedicTauntMelee
+	}
+
+// Sniper
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotSniperrifle" 		"playerweapon" "!=tf_weapon_sniperrifle" 		"required"
+	criterion "WeaponIsNotBowType" 			"playerweapon" "!=tf_weapon_compound_bow" 		"required"
+	criterion "WeaponIsNotHunterRifle" 		"playerweapon" "!=tf_weapon_hunterrifle" 		"required"
+	criterion "WeaponIsNotSMG" 				"playerweapon" "!=tf_weapon_smg" 				"required"
+	criterion "WeaponIsNotClub" 			"playerweapon" "!=tf_weapon_club" 				"required"
+
+	rule Custom-SniperTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper IsWeaponPrimary WeaponIsNotSniperrifle WeaponIsNotBowType WeaponIsNotHunterRifle
+		response SniperTauntPrimary
+	}
+	rule Custom-SniperTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper IsWeaponSecondary WeaponIsNotSMG
+		response SniperTauntSecondary
+	}
+	rule Custom-SniperTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper IsWeaponMelee WeaponIsNotClub
+		response SniperTauntMelee
+	}
+	
+// Spy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotRevolver" 		"playerweapon" "!=tf_weapon_revolver" 			"required"
+	criterion "WeaponIsNotTranquilizer" 	"playerweapon" "!=tf_weapon_tranq" 				"required"
+	criterion "WeaponIsNotKnife" 			"playerweapon" "!=tf_weapon_knife" 				"required"
+
+	criterion "WeaponIsNotSapper" 			"playerweapon" "!=tf_weapon_sapper" 			"required"
+	criterion "WeaponIsNotSpyPDA" 			"playerweapon" "!=tf_weapon_pda_spy" 			"required"
+
+	rule Custom-SpyTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponPrimary
+		response SpyTauntPrimary
+	}
+	rule Custom-SpyTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponSecondary WeaponIsNotRevolver WeaponIsNotTranquilizer
+		response SpyTauntPrimary
+	}
+	rule Custom-SpyTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponMelee WeaponIsNotKnife
+		response SpyTauntMelee
+	}
+	rule Custom-SpyTauntPDAGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponPda WeaponIsNotSpyPDA
+		response SpyTauntPDA
+	}
+
+// Civilian (TF2C)
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotUmbrella" 		"playerweapon" "!=tf_weapon_umbrella" 				"required"
+
+	rule Custom-CivilianTauntPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsCivilian IsWeaponPrimary
+		response CivilianTauntMelee
+	}
+	rule Custom-CivilianTauntSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsCivilian IsWeaponSecondary
+		response CivilianTauntMelee
+	}
+	rule Custom-CivilianTauntMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsCivilian IsWeaponMelee WeaponIsNotUmbrella
+		response CivilianTauntMelee
+	}

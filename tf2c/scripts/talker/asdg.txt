@@ -1,0 +1,477 @@
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//-------------------Custom Response Rule File -- This is to add taunts!----------------------------
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+
+//------------------------------------
+//--New-Old Weapons Custom Responses--
+//------------------------------------
+
+//------------------
+//--Generic Taunts--
+//------------------
+
+// Scout
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotScattergun"		"playerweapon" "!=tf_weapon_scattergun" 		"required"
+	criterion "WeaponIsNotNailGun" 			"playerweapon" "!=tf_weapon_nailgun" 			"required"
+	criterion "WeaponIsNotPistolScout" 		"playerweapon" "!=tf_weapon_pistol_scout" 		"required"
+	criterion "WeaponIsNotBat" 				"playerweapon" "!=tf_weapon_bat" 				"required"
+	
+	rule ScoutTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout IsWeaponPrimary WeaponIsNotScattergun WeaponIsNotNailGun
+		response ScoutTauntPrimary
+	}
+	rule ScoutTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout IsWeaponSecondary WeaponIsNotPistolScout
+		response ScoutTauntSecondary
+	}
+	rule ScoutTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout IsWeaponMelee WeaponIsNotBat
+		response ScoutTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+
+	criterion "WeaponIsMIRVType" 			"playerweapon" "tf_weapon_grenade_mirv" 		"required"
+
+	rule ScoutTauntThrowableGeneric
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsMIRVType
+		response ScoutTauntMelee
+	}
+//---
+	criterion "WeaponIsFAN" 				"item_name" "TF_WEAPON_DOUBLE_BARREL" 			"required" weight 10
+	criterion "WeaponIsBonk" 				"item_name" "TF_WEAPON_ENERGY_DRINK" 			"required" weight 10
+	criterion "WeaponIsSandman" 			"item_name" "TF_WEAPON_WOOD_BAT" 				"required" weight 10
+	criterion "WeaponIsFish" 				"item_name" "TF_WEAPON_HOLYMACKEREL" 			"required" weight 10
+	criterion "WeaponIsPan" 				"item_name" "TF_WEAPON_FRYING_PAN" 				"required" weight 10
+
+	Rule PlayerDoubleJumpScout
+	{
+		criteria ConceptFireWeapon IsScout IsDoubleJumping WeaponIsFAN 20PercentChance
+		Response PlayerDoubleJumpScout
+	}
+	Rule PlayerThrowableScout
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsScout
+		Response MilkLaunchScout
+	}
+	Rule ScoutTauntDrink
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsBonk
+		response ScoutTauntSecondary
+	}
+	Rule DrankBonkScout
+	{
+		criteria ConceptAteFood IsScout WeaponIsBonk
+		ApplyContext "ScoutInvuln:1:20"
+		Response PlayerDodgingScout
+	}
+	Rule PlayerSandmanSwingScout
+	{
+		criteria ConceptFireWeapon IsScout WeaponIsSandman 10PercentChance
+		Response PlayerStunBallHittingItScout
+	}
+	Rule PlayerSandmanKillScout
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponMelee WeaponIsSandman ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response PlayerStunBallHitScout
+	}
+	Response PlayerFishKillScout
+	{
+		scene "scenes/player/Scout/low/435.vcd"
+		scene "scenes/player/Scout/low/2554.vcd"
+		scene "scenes/Player/Scout/low/2647.vcd"
+		scene "scenes/Player/Scout/low/2645.vcd"
+		scene "scenes/player/Scout/low/2654.vcd"
+		scene "scenes/Player/Scout/low/2647.vcd"
+	}
+	Rule PlayerFishKillScout
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 40PercentChance IsWeaponMelee WeaponIsFish ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response PlayerFishKillScout
+	}
+	Rule PlayerPanKillScout
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 20PercentChance IsWeaponMelee WeaponIsPan ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response PlayerFishKillScout
+	}
+
+// Soldier
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotRocket" 			"playerweapon" "!=tf_weapon_rocketlauncher" 	"required"
+	criterion "WeaponIsNotShotgunSoldier" 	"playerweapon" "!=tf_weapon_shotgun_soldier" 	"required"
+	criterion "WeaponIsNotShovel" 			"playerweapon" "!=tf_weapon_shovel" 			"required"
+
+	rule SoldierTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSoldier IsWeaponPrimary WeaponIsNotRocket
+		response SoldierTauntPrimary
+	}
+	rule SoldierTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSoldier IsWeaponSecondary WeaponIsNotShotgunSoldier
+		response SoldierTauntSecondary
+	}
+	rule SoldierTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsSoldier IsWeaponMelee WeaponIsNotShovel
+		response SoldierTauntMelee
+	}
+
+// Pyro
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotFlamethrower" 	"playerweapon" "!=tf_weapon_flamethrower" 		"required"
+	criterion "WeaponIsNotShotgunPyro" 		"playerweapon" "!=tf_weapon_shotgun_pyro" 		"required"
+	criterion "WeaponIsNotFlaregun" 		"playerweapon" "!=tf_weapon_flaregun" 			"required"
+	criterion "WeaponIsNotFireAxe" 			"playerweapon" "!=tf_weapon_fireaxe" 			"required"
+
+	rule PyroTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro IsWeaponPrimary WeaponIsNotFlamethrower
+		response PyroTauntPrimary
+	}
+	rule PyroTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro IsWeaponSecondary WeaponIsNotShotgunPyro WeaponIsNotFlaregun
+		response PyroTauntSecondary
+	}
+	rule PyroTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro IsWeaponMelee WeaponIsNotFireAxe
+		response PyroTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+	rule PyroTauntPlayerPan
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsPan
+		response PyroTauntItem1
+	}
+	rule PyroTauntPlayerThrowableGeneric
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsMIRVType
+		response PyroTauntItem1
+	}
+//---
+	Response GasThrowPyro
+	{
+		scene "scenes/Player/Pyro/low/1419.vcd"
+		scene "scenes/Player/Pyro/low/1457.vcd"
+		scene "scenes/Player/Pyro/low/1460.vcd"
+	}
+	Rule PlayerThrowablePyro
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsPyro
+		Response GasThrowPyro
+	}
+
+// Demoman
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotGrenade" 			"playerweapon" "!=tf_weapon_grenadelauncher" 	"required"
+	criterion "WeaponIsNotPipebomb" 		"playerweapon" "!=tf_weapon_pipebomblauncher" 	"required"
+	criterion "WeaponIsNotMIRVType" 		"playerweapon" "!=tf_weapon_grenade_mirv" 		"required"
+	criterion "WeaponIsNotBottle" 			"playerweapon" "!=tf_weapon_bottle" 			"required"
+
+	rule DemomanTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsDemoman IsWeaponPrimary WeaponIsNotPipebomb WeaponIsNotMIRVType
+		response DemomanTauntPrimary
+	}
+	rule DemomanTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsDemoman IsWeaponSecondary WeaponIsNotGrenade
+		response DemomanTauntSecondary
+	}
+	rule DemomanTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsDemoman IsWeaponMelee WeaponIsNotBottle
+		response DemomanTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+	criterion "WeaponIsNotPan" 				"item_name" "!=TF_WEAPON_FRYING_PAN" 			"required" weight 10
+	criterion "WeaponIsEyelander" 			"item_name" "TF_WEAPON_CLAYMORE" 				"required" weight 10
+
+	rule DemomanTauntPlayerDemoClub
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsClub WeaponIsNotPan
+		response DemomanTauntSecondary
+	}
+//---
+	Rule PlayerClubKillDemoman
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsClub 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerPanDemoman
+	}
+	Rule PlayerEyelanderKillDemoman
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsEyelander 30PercentChance IsNotVictimDemoman DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSwordDemoman
+	}
+	Rule PlayerEyelanderKill2Demoman
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsEyelander 30PercentChance IsVictimDemoman DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSword2Demoman
+	}
+
+// Heavy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotMinigun" 			"playerweapon" "!=tf_weapon_minigun" 			"required"
+	criterion "WeaponIsNotShotgunHwg" 		"playerweapon" "!=tf_weapon_shotgun_hwg" 		"required"
+	criterion "WeaponIsNotLunchbox" 		"playerweapon" "!=tf_weapon_lunchbox" 			"required"
+	criterion "WeaponIsNotFists" 			"playerweapon" "!=tf_weapon_fists" 				"required"
+
+	rule HeavyTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponPrimary WeaponIsNotMinigun
+		response HeavyTauntPrimary
+	}
+	rule HeavyTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponSecondary WeaponIsNotShotgunHwg WeaponIsNotLunchbox
+		response HeavyTauntSecondary
+	}
+	rule HeavyTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsHeavy IsWeaponMelee WeaponIsNotFists
+		response HeavyTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+	criterion "WeaponIsHMG" 				"item_name" "TF_WEAPON_MACHINEGUN" 				"required" weight 10
+	criterion "WeaponIsAA12" 				"item_name" "TF_WEAPON_AA12_REPEATER" 			"required" weight 10
+	criterion "WeaponIsCrowbar" 			"item_name" "TF_WEAPON_CROWBAR" 				"required" weight 10
+	criterion "WeaponIsObjector" 			"item_name" "TF_WEAPON_PICKET" 					"required" weight 10
+	criterion "WeaponIsPipe" 				"item_name" "TF_WEAPON_LEAD_PIPE" 				"required" weight 10
+
+	rule HeavyTauntPlayerHMG
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsHMG
+		response HeavyTauntSecondary
+	}
+	rule HeavyTauntPlayerAA12
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsAA12
+		response HeavyTauntSecondary
+	}
+	rule HeavyTauntPlayerCrowbar
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsCrowbar 
+		response HeavyTauntSecondary
+	}
+	rule HeavyTauntPlayerObjector
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsObjector
+		response HeavyTauntSecondary
+	}
+	rule HeavyTauntPlayerPipe
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsPipe
+		response HeavyTauntSecondary
+	}
+
+// Engineer
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotShotgunPrimary" 	"playerweapon" "!=tf_weapon_shotgun_primary" 	"required"
+	criterion "WeaponIsNotPistol" 			"playerweapon" "!=tf_weapon_pistol" 			"required"
+	criterion "WeaponIsNotCoilgunType" 		"playerweapon" "!=tf_weapon_coilgun" 			"required"
+	criterion "WeaponIsNotWrench"		 	"playerweapon" "!=tf_weapon_wrench" 			"required"
+
+	criterion "WeaponIsNotBuild" 			"playerweapon" "!=tf_weapon_builder" 			"required"
+	criterion "WeaponIsNotPDABuild" 		"playerweapon" "!=tf_weapon_pda_engineer_build" "required"
+	criterion "WeaponIsNotPDADestroy" 		"playerweapon" "!=tf_weapon_pda_engineer_destroy" "required"
+
+	rule EngineerTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsEngineer IsWeaponPrimary WeaponIsNotShotgunPrimary
+		response EngineerTauntPrimary
+	}
+	rule EngineerTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsEngineer IsWeaponSecondary WeaponIsNotPistol WeaponIsNotCoilgunType
+		response EngineerTauntSecondary
+	}
+	rule EngineerTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsEngineer IsWeaponMelee WeaponIsNotWrench
+		response EngineerTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+	rule EngineerTauntPlayerNailgun
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsNailgun
+		response EngineerTauntSecondary
+	}
+//---
+	criterion "WeaponIsRailgun" 			"item_name" "TF_WEAPON_RAILGUN_DM" 				"required" weight 10
+	criterion "WeaponIsRevolverTypeName" 	"item_type_name" "#TF_Weapon_Revolver" 			"required" weight 10
+
+	Rule PlayerRailGunKillEngineer
+	{
+		criteria ConceptKilledPlayer IsEngineer WeaponIsRailgun 30PercentChance
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngineerLaserPointer
+	}
+	Rule PlayerRevolverKillEngineer
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 20PercentChance WeaponIsRevolverTypeName IsEngineer EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngySwingFist
+	}
+
+// Medic
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotSyringe" 			"playerweapon" "!=tf_weapon_syringegun_medic" 	"required"
+	criterion "WeaponIsNotHeal" 			"playerweapon" "!=tf_weapon_medigun" 			"required"
+	criterion "WeaponIsNotBonesaw" 			"playerweapon" "!=tf_weapon_bonesaw" 			"required"
+	criterion "WeaponIsNotTaser" 			"playerweapon" "!=tf_weapon_taser" 				"required"
+
+	rule MedicTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsMedic IsWeaponPrimary WeaponIsNotSyringe
+		response MedicTauntPrimary
+	}
+	rule MedicTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsMedic IsWeaponSecondary WeaponIsNotHeal
+		response MedicTauntSecondary
+	}
+	rule MedicTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsMedic IsWeaponMelee WeaponIsNotBonesaw WeaponIsNotTaser
+		response MedicTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+	rule MedicTauntPlayerCrowbar
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsCrowbar 
+		response MedicTauntPrimary
+	}
+	rule MedicTauntPlayerPan
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsPan
+		response MedicTauntUbersaw
+	}
+	rule MedicTauntPlayerObjector
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsObjector
+		response MedicTauntPrimary
+	}
+
+// Sniper
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotSniperrifle" 		"playerweapon" "!=tf_weapon_sniperrifle" 		"required"
+	criterion "WeaponIsNotBowType" 			"playerweapon" "!=tf_weapon_compound_bow" 		"required"
+	criterion "WeaponIsNotHunterRifle" 		"playerweapon" "!=tf_weapon_hunterrifle" 		"required"
+	criterion "WeaponIsNotSMG" 				"playerweapon" "!=tf_weapon_smg" 				"required"
+	criterion "WeaponIsNotClub" 			"playerweapon" "!=tf_weapon_club" 				"required"
+
+	rule SniperTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper IsWeaponPrimary WeaponIsNotSniperrifle WeaponIsNotBowType WeaponIsNotHunterRifle
+		response SniperTauntPrimary
+	}
+	rule SniperTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper IsWeaponSecondary WeaponIsNotSMG
+		response SniperTauntSecondary
+	}
+	rule SniperTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper IsWeaponMelee WeaponIsNotClub
+		response SniperTauntMelee
+	}
+
+// New-Old Weapons Pack
+//---
+	rule SniperTauntPlayerThrowableGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper WeaponIsMIRVType
+		response SniperTauntPrimary
+	}
+//---
+	Rule PlayerThrowableSniper
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSniper
+		Response PlayerJarateToss
+	}
+	
+// Spy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotRevolver" 		"playerweapon" "!=tf_weapon_revolver" 			"required"
+	criterion "WeaponIsNotTranquilizer" 	"playerweapon" "!=tf_weapon_tranq" 				"required"
+	criterion "WeaponIsNotKnife" 			"playerweapon" "!=tf_weapon_knife" 				"required"
+
+	criterion "WeaponIsNotSapper" 			"playerweapon" "!=tf_weapon_sapper" 			"required"
+	criterion "WeaponIsNotSpyPDA" 			"playerweapon" "!=tf_weapon_pda_spy" 			"required"
+
+	rule SpyTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponPrimary
+		response SpyTauntPrimary
+	}
+	rule SpyTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponSecondary WeaponIsNotRevolver WeaponIsNotTranquilizer
+		response SpyTauntPrimary
+	}
+	rule SpyTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponMelee WeaponIsNotKnife
+		response SpyTauntMelee
+	}
+	rule SpyTauntPlayerPDAGeneric
+	{
+		criteria ConceptPlayerTaunt IsSpy IsWeaponPda WeaponIsNotSpyPDA
+		response SpyTauntPDA
+	}
+
+// New-Old Weapons Pack
+//---
+	criterion "WeaponIsKnifeGun" 			"item_name" "TF_WEAPON_KNIFE_GUN" 					"required" weight 10
+
+	rule SpyTauntPlayerKnifeGun
+	{
+		criteria ConceptPlayerTaunt IsSpy WeaponIsKnifeGun
+		response SpyTauntPDA
+	}
+
+// Civilian (TF2C)
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotUmbrella" 		"playerweapon" "!=tf_weapon_umbrella" 				"required"
+
+	Rule CivilianTauntPlayerPrimaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsCivilian IsWeaponPrimary
+		response CivilianTauntMelee
+	}
+	Rule CivilianTauntPlayerSecondaryGeneric
+	{
+		criteria ConceptPlayerTaunt IsCivilian IsWeaponSecondary
+		response CivilianTauntMelee
+	}
+	Rule CivilianTauntPlayerMeleeGeneric
+	{
+		criteria ConceptPlayerTaunt IsCivilian IsWeaponMelee WeaponIsNotUmbrella
+		response CivilianTauntMelee
+	}
